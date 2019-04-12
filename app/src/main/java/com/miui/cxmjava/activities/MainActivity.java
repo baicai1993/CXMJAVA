@@ -1,8 +1,9 @@
-package com.miui.cxmjava;
+package com.miui.cxmjava.activities;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -13,8 +14,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.miui.cxmjava.R;
+import com.miui.cxmjava.utils.HomeKeyUtil;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private static final String TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +47,23 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        HomeKeyUtil.registerHomeKeyReceiver(this, new HomeKeyUtil.HomeKeyListener() {
+            @Override
+            public void homeKey() {
+                Log.i(TAG, "home pressed");
+            }
+        });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        HomeKeyUtil.unregisterHomeKeyReceiver(this);
     }
 
     @Override
